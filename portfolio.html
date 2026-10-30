@@ -1,0 +1,602 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>My Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a résumé served as a database. The hero shows a vertical-format profile row, a read-only query console lets visitors pull tables, and a Gantt-style timeline replaces the usual job list. */
+:root {
+  --paper: #E7EDF2;
+  --panel: #F6F9FB;
+  --ink: #10202C;
+  --muted: #475B6B;
+  --line: #C2CED8;
+  --grid: rgba(16, 32, 44, 0.07);
+  --accent: #1B4FD6;
+  --on-accent: #FFFFFF;
+  --bar: #C6D6F6;
+  --mark: #F7C948;
+  --mark-ink: #10202C;
+  --font-display: 'Bricolage Grotesque', system-ui, 'Segoe UI', sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0B161E; --panel: #112330; --ink: #E2ECF2; --muted: #9CB1BF; --line: #26404F;
+    --grid: rgba(226, 236, 242, 0.06); --accent: #7FA8FF; --on-accent: #0B161E; --bar: #1F3F66; --mark: #E9B93B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0B161E; --panel: #112330; --ink: #E2ECF2; --muted: #9CB1BF; --line: #26404F;
+  --grid: rgba(226, 236, 242, 0.06); --accent: #7FA8FF; --on-accent: #0B161E; --bar: #1F3F66; --mark: #E9B93B;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 16px/1.6 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* top bar */
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 18px; font: 500 13px var(--font-mono); color: var(--muted); }
+.topbar b { color: var(--ink); font-weight: 500; }
+.btn {
+  font: 500 12px var(--font-mono);
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* hero */
+.hero-band { position: relative; }
+.hero-band::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: linear-gradient(#000 55%, transparent);
+  mask-image: linear-gradient(#000 55%, transparent);
+  pointer-events: none;
+}
+.hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 40px 56px; align-items: start; padding-block: 36px 64px; }
+.eyebrow { font: 500 12px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+h1 {
+  font: 700 clamp(2.7rem, 8.4vw, 5.6rem)/0.94 var(--font-display);
+  letter-spacing: -0.025em;
+  margin: 0 0 22px;
+  text-wrap: balance;
+}
+.role { font: 600 clamp(1.3rem, 3vw, 1.7rem)/1.25 var(--font-display); margin: 0 0 14px; }
+.mark { background: linear-gradient(transparent 52%, var(--mark) 52% 92%, transparent 92%); color: var(--ink); padding: 0 0.12em; margin: 0 -0.12em; }
+.lede { max-width: 56ch; color: var(--ink); margin: 0 0 24px; }
+.contact { display: flex; flex-wrap: wrap; gap: 10px 22px; font: 400 14px var(--font-mono); }
+.contact span.item { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.contact .k { color: var(--muted); }
+.contact .v { overflow-wrap: anywhere; }
+
+.profile { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 16px 18px 18px; min-width: 0; }
+.profile .cap { font: 500 12px var(--font-mono); color: var(--muted); margin: 0 0 10px; }
+.profile dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 9px 16px; margin: 0; font-size: 14.5px; line-height: 1.45; }
+.profile dt { font: 500 12.5px/1.6 var(--font-mono); color: var(--muted); text-align: right; }
+.profile dd { margin: 0; overflow-wrap: anywhere; }
+
+/* sections */
+section { padding-block: 56px; }
+.sec-head { display: flex; flex-direction: column; gap: 6px; margin-bottom: 26px; }
+.sec-head .cm { font: 400 13px var(--font-mono); color: var(--muted); }
+h2 { font: 700 clamp(1.7rem, 4vw, 2.5rem)/1.05 var(--font-display); letter-spacing: -0.015em; margin: 0; text-wrap: balance; }
+.divider { border: 0; border-top: 1px solid var(--line); margin: 0; }
+
+/* console */
+.console { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.console .bar { display: flex; justify-content: space-between; gap: 12px; padding: 9px 14px; border-bottom: 1px solid var(--line); font: 500 12px var(--font-mono); color: var(--muted); }
+.console .bar .live { color: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px; border-bottom: 1px solid var(--line); }
+.chip { font: 500 12.5px var(--font-mono); color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 3px; padding: 6px 10px; cursor: pointer; }
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.chip .n { opacity: 0.7; margin-left: 6px; }
+.prompt { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line); font: 400 14px var(--font-mono); }
+.prompt label { color: var(--accent); white-space: nowrap; }
+.prompt input { flex: 1; min-width: 0; font: inherit; color: var(--ink); background: transparent; border: 0; padding: 4px 0; caret-color: var(--accent); }
+.prompt input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.run { flex: none; }
+.out { padding: 14px; min-height: 180px; }
+.echo { font: 400 13px var(--font-mono); color: var(--muted); margin-bottom: 4px; overflow-wrap: anywhere; }
+.echo .ps { color: var(--accent); }
+.meta { font: 500 12px var(--font-mono); color: var(--muted); margin: 0 0 10px; }
+.msg { font: 400 14px var(--font-mono); margin: 8px 0 0; }
+.msg.err { color: var(--ink); border-left: 3px solid var(--mark); padding-left: 10px; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th { text-align: left; font: 500 11.5px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding: 6px 12px 6px 0; border-bottom: 1px solid var(--ink); white-space: nowrap; }
+td { vertical-align: top; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); min-width: 90px; overflow-wrap: break-word; }
+tbody tr { animation: rowin 0.35s ease backwards; animation-delay: calc(var(--i, 0) * 45ms); }
+@keyframes rowin { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+.hint { font: 400 13px var(--font-mono); color: var(--muted); margin: 14px 0 0; overflow-wrap: anywhere; }
+
+/* timeline */
+.tl { list-style: none; margin: 0; padding: 0; }
+.axis { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 0 20px; }
+.axis .ticks { position: relative; height: 22px; font: 400 11.5px var(--font-mono); color: var(--muted); }
+.axis .ticks span { position: absolute; top: 0; left: calc(var(--i) * 12.5%); padding-left: 4px; }
+.tl li { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 0 20px; align-items: center; padding-block: 8px; border-top: 1px solid var(--line); }
+.tl li.gap { border-top: 1px solid var(--ink); margin-top: 10px; }
+.lab { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+.lab b { font: 600 15px var(--font-display); }
+.lab span { font-size: 13px; color: var(--muted); }
+.track { position: relative; height: 34px; background-image: linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 12.5% 100%; }
+.track .b { position: absolute; top: 5px; bottom: 5px; left: calc(var(--s) * 12.5%); width: calc((var(--e) - var(--s)) * 12.5%); background: var(--bar); color: var(--ink); font: 500 12px/24px var(--font-mono); padding-left: 8px; white-space: nowrap; overflow: hidden; }
+.track .b.strong { background: var(--accent); color: var(--on-accent); }
+.mk { position: absolute; top: 50%; left: calc(var(--s) * 12.5%); width: 14px; height: 14px; background: var(--mark); border: 2px solid var(--ink); border-radius: 50%; transform: translate(-50%, -50%); }
+.mk-l { position: absolute; top: 50%; left: calc(var(--s) * 12.5% + 15px); transform: translateY(-50%); font: 500 12px var(--font-mono); color: var(--muted); white-space: nowrap; }
+.mk-l.flip { left: auto; right: calc((8 - var(--s)) * 12.5% + 15px); }
+.tl-note { font: 400 12.5px var(--font-mono); color: var(--muted); margin: 14px 0 0; }
+
+/* projects */
+.plist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+.plist li { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr); gap: 8px 40px; padding-block: 24px; border-bottom: 1px solid var(--line); }
+.plist h3 { font: 700 clamp(1.3rem, 2.6vw, 1.7rem)/1.15 var(--font-display); letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+.plist .sub { font: 400 12.5px var(--font-mono); color: var(--muted); margin-top: 6px; display: block; }
+.plist p { margin: 0; max-width: 62ch; }
+
+/* workflow */
+.flow { display: flex; flex-wrap: wrap; gap: 14px 0; list-style: none; padding: 0; margin: 0; }
+.flow li { position: relative; flex: 1 1 150px; min-width: 0; padding: 0 22px 0 0; }
+.flow li:not(:last-child)::after { content: "→"; position: absolute; right: 4px; top: 0; font: 400 20px/1.2 var(--font-mono); color: var(--accent); }
+.flow b { display: block; font: 700 1.25rem/1.2 var(--font-display); }
+.flow span { font: 400 12.5px var(--font-mono); color: var(--muted); }
+
+/* toolkit and credentials */
+.kit { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 48px; margin: 0; }
+.kit div { padding-block: 14px; border-top: 1px solid var(--line); min-width: 0; }
+.kit dt { font: 500 12px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.kit dd { margin: 0; font-size: 15.5px; overflow-wrap: break-word; }
+.cred { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px 56px; }
+.cred h3 { font: 700 1.25rem/1.2 var(--font-display); margin: 0 0 10px; }
+.cred ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+.cred li { display: flex; justify-content: space-between; gap: 16px; padding-block: 11px; border-bottom: 1px solid var(--line); }
+.cred li > span:first-child { min-width: 0; }
+.cred li small { display: block; color: var(--muted); font-size: 13px; }
+.cred li .yr { font: 500 12.5px var(--font-mono); color: var(--muted); white-space: nowrap; padding-top: 2px; }
+
+/* footer */
+footer { padding-block: 48px 64px; border-top: 1px solid var(--ink); }
+footer .big { font: 700 clamp(1.8rem, 5vw, 3rem)/1.05 var(--font-display); letter-spacing: -0.02em; margin: 0 0 18px; text-wrap: balance; }
+
+@media (max-width: 820px) {
+  .hero { grid-template-columns: minmax(0, 1fr); padding-block: 24px 48px; }
+  .plist li { grid-template-columns: minmax(0, 1fr); }
+  section { padding-block: 44px; }
+}
+@media (max-width: 640px) {
+  .axis, .tl li { grid-template-columns: minmax(0, 1fr); gap: 6px 0; }
+  .axis > .spacer { display: none; }
+  .profile dl { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .profile dt { text-align: left; margin-top: 8px; }
+  .prompt { flex-wrap: wrap; }
+  .flow li { flex-basis: 100%; padding-right: 0; }
+  .flow li:not(:last-child)::after { content: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  tbody tr { animation: none; }
+}
+</style>
+
+<div class="hero-band">
+  <div class="wrap">
+    <div class="topbar">
+      <span><b>vsk</b> / portfolio.db</span>
+      <button class="btn" id="theme" type="button">Switch theme</button>
+    </div>
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Chennai, India · Class of 2026</p>
+        <h1>Venkat Sai Krishnan</h1>
+        <p class="role">Aspiring <span class="mark">data analyst</span></p>
+        <p class="lede">I clean, query and visualize data with Python, SQL, Excel and Power BI. I am looking for a role where I can apply those skills to data-driven decisions while I keep learning on the job.</p>
+        <div class="contact">
+          <span class="item"><span class="k">email</span> <span class="v" id="email">venkatsaikrishnan28@gmail.com</span> <button class="btn" type="button" data-copy="venkatsaikrishnan28@gmail.com" data-target="email">Copy</button></span>
+          <span class="item"><span class="k">phone</span> <span class="v" id="phone">+91 9080556861</span> <button class="btn" type="button" data-copy="+91 9080556861" data-target="phone">Copy</button></span>
+        </div>
+      </div>
+      <aside class="profile" aria-label="Profile summary">
+        <p class="cap">SELECT * FROM profile\G</p>
+        <dl>
+          <dt>name</dt><dd>Venkat Sai Krishnan</dd>
+          <dt>role</dt><dd>Aspiring Data Analyst</dd>
+          <dt>degree</dt><dd>B.Tech Computer Science and Business Systems</dd>
+          <dt>college</dt><dd>RMK Engineering College, 2022–2026</dd>
+          <dt>cgpa</dt><dd>7.79</dd>
+          <dt>tools</dt><dd>Python, SQL, Excel, Power BI</dd>
+          <dt>finals</dt><dd>3 (SIH 2023, SIH 2024, Techgium 9th Edition)</dd>
+          <dt>best_result</dt><dd>2nd place, paper presentation, Techgium 2026</dd>
+          <dt>status</dt><dd>Open to opportunities</dd>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<main>
+  <hr class="divider">
+  <div class="wrap">
+    <section id="console">
+      <div class="sec-head">
+        <span class="cm">-- query my résumé</span>
+        <h2>Ask the database</h2>
+      </div>
+      <div class="console">
+        <div class="bar"><span>venkat.db · read only</span><span class="live">connected</span></div>
+        <div class="chips" id="chips" role="group" aria-label="Tables"></div>
+        <form class="prompt" id="qform" autocomplete="off">
+          <label for="q">sql&gt;</label>
+          <input id="q" type="text" spellcheck="false" value="SELECT * FROM projects;" aria-label="SQL query">
+          <button class="btn run" type="submit">Run</button>
+        </form>
+        <div class="out" id="out" aria-live="polite"></div>
+      </div>
+      <p class="hint">Try <code>SELECT * FROM skills WHERE category = 'data'</code>, <code>show tables</code> or <code>help</code>.</p>
+    </section>
+  </div>
+
+  <hr class="divider">
+  <div class="wrap">
+    <section id="timeline">
+      <div class="sec-head">
+        <span class="cm">-- ORDER BY date</span>
+        <h2>2019 to 2026, on one axis</h2>
+      </div>
+      <ol class="tl">
+        <li class="axis" aria-hidden="true" style="border-top:0;padding-block:0">
+          <div class="spacer"></div>
+          <div class="ticks">
+            <span style="--i:0">2019</span><span style="--i:1">2020</span><span style="--i:2">2021</span><span style="--i:3">2022</span><span style="--i:4">2023</span><span style="--i:5">2024</span><span style="--i:6">2025</span><span style="--i:7">2026</span>
+          </div>
+        </li>
+        <li>
+          <div class="lab"><b>SSLC, 70%</b><span>T.J.S Matriculation Hr. Sec. School</span></div>
+          <div class="track"><span class="b" style="--s:0;--e:1">2019–20</span></div>
+        </li>
+        <li>
+          <div class="lab"><b>Diploma (DME), 88%</b><span>Sri Durgadevi Polytechnic College</span></div>
+          <div class="track"><span class="b" style="--s:1;--e:4">2020–23</span></div>
+        </li>
+        <li>
+          <div class="lab"><b>B.Tech CSBS, CGPA 7.79</b><span>RMK Engineering College</span></div>
+          <div class="track"><span class="b strong" style="--s:3;--e:7">2022–26</span></div>
+        </li>
+        <li class="gap">
+          <div class="lab"><b>Smart India Hackathon finalist</b><span>IoT-based drug detection for logistic containers</span></div>
+          <div class="track"><span class="mk" style="--s:4.92"></span><span class="mk-l" style="--s:4.92">Dec 2023</span></div>
+        </li>
+        <li>
+          <div class="lab"><b>Smart India Hackathon finalist</b><span>2024 edition</span></div>
+          <div class="track"><span class="mk" style="--s:5.5"></span><span class="mk-l" style="--s:5.5">2024</span></div>
+        </li>
+        <li>
+          <div class="lab"><b>Web Development Intern</b><span>Virtual Tech Service, Chennai</span></div>
+          <div class="track"><span class="mk" style="--s:7.42"></span><span class="mk-l flip" style="--s:7.42">Jun 2026</span></div>
+        </li>
+        <li>
+          <div class="lab"><b>2nd place, paper presentation</b><span>Techgium, Prathyusha Engineering College</span></div>
+          <div class="track"><span class="mk" style="--s:7.5"></span><span class="mk-l flip" style="--s:7.5">2026</span></div>
+        </li>
+      </ol>
+      <p class="tl-note">Events with no stated month sit mid-year. Techgium 9th Edition (LTTS) finalist is listed under Credentials because no year is given.</p>
+    </section>
+  </div>
+
+  <hr class="divider">
+  <div class="wrap">
+    <section id="projects">
+      <div class="sec-head">
+        <span class="cm">-- FROM projects</span>
+        <h2>Things I have built</h2>
+      </div>
+      <ul class="plist">
+        <li>
+          <div><h3>E-Pharmacy Platform</h3><span class="sub">Cryptocurrency payments</span></div>
+          <p>An e-pharmacy platform where users browse medicines and complete digital transactions through a straightforward interface, with secure cryptocurrency payment integration.</p>
+        </li>
+        <li>
+          <div><h3>AI-Based Resume Builder</h3><span class="sub">With job mapping</span></div>
+          <p>An AI-powered resume builder that generates professional resumes and maps a user's profile to relevant job opportunities using intelligent data processing.</p>
+        </li>
+        <li>
+          <div><h3>Drug Detection System</h3><span class="sub">Smart India Hackathon 2023 · Finalist</span></div>
+          <p>An IoT-based system for logistic containers that detects illegal substances and improves cargo security during transportation.</p>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <hr class="divider">
+  <div class="wrap">
+    <section id="workflow">
+      <div class="sec-head">
+        <span class="cm">-- how a dataset moves</span>
+        <h2>From raw rows to a decision</h2>
+      </div>
+      <ol class="flow">
+        <li><b>Query</b><span>SQL, database querying</span></li>
+        <li><b>Clean</b><span>Data cleaning</span></li>
+        <li><b>Transform</b><span>Data transformation</span></li>
+        <li><b>Explore</b><span>EDA in Jupyter Notebook</span></li>
+        <li><b>Visualize</b><span>Power BI, Excel dashboards</span></li>
+        <li><b>Decide</b><span>Business analytics</span></li>
+      </ol>
+    </section>
+  </div>
+
+  <hr class="divider">
+  <div class="wrap">
+    <section id="toolkit">
+      <div class="sec-head">
+        <span class="cm">-- DESCRIBE skills</span>
+        <h2>Toolkit</h2>
+      </div>
+      <dl class="kit">
+        <div><dt>Programming</dt><dd>Python, JavaScript, HTML, CSS</dd></div>
+        <div><dt>Data analysis</dt><dd>Data cleaning, data transformation, exploratory data analysis</dd></div>
+        <div><dt>Data visualization</dt><dd>Power BI, Excel, dashboard development</dd></div>
+        <div><dt>Database</dt><dd>SQL, database querying</dd></div>
+        <div><dt>Tools</dt><dd>Git, GitHub, VS Code, Microsoft Excel, Power BI, Jupyter Notebook</dd></div>
+        <div><dt>Business</dt><dd>Fintech, business analytics, data-driven decision making</dd></div>
+        <div><dt>Soft skills</dt><dd>Communication, teamwork, problem solving, innovation, creativity, critical thinking, time management</dd></div>
+      </dl>
+    </section>
+  </div>
+
+  <hr class="divider">
+  <div class="wrap">
+    <section id="credentials">
+      <div class="sec-head">
+        <span class="cm">-- proof of work</span>
+        <h2>Credentials</h2>
+      </div>
+      <div class="cred">
+        <div>
+          <h3>Achievements</h3>
+          <ul>
+            <li><span>2nd place, paper presentation<small>Prathyusha Engineering College, Techgium edition</small></span><span class="yr">2026</span></li>
+            <li><span>Finalist, Smart India Hackathon<small>Ministry of Education, Government of India</small></span><span class="yr">2024</span></li>
+            <li><span>Finalist, Smart India Hackathon<small>Ministry of Education, Government of India</small></span><span class="yr">2023</span></li>
+            <li><span>Finalist, Techgium 9th Edition<small>LTTS</small></span><span class="yr"></span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Certifications</h3>
+          <ul>
+            <li><span>Data Analytics Course<small>Code99 IT Academy</small></span></li>
+            <li><span>Excel &amp; Power BI<small>Infosys Springboard</small></span></li>
+            <li><span>Python Course<small>Besant Technologies</small></span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="big">Have a dataset that needs an analyst?</p>
+    <div class="contact">
+      <span class="item"><span class="k">email</span> <span class="v" id="email2">venkatsaikrishnan28@gmail.com</span> <button class="btn" type="button" data-copy="venkatsaikrishnan28@gmail.com" data-target="email2">Copy</button></span>
+      <span class="item"><span class="k">phone</span> <span class="v" id="phone2">+91 9080556861</span> <button class="btn" type="button" data-copy="+91 9080556861" data-target="phone2">Copy</button></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var DB = {
+    projects: [
+      { title: 'E-Pharmacy Platform', theme: 'Cryptocurrency payments', summary: 'Users browse medicines and complete digital transactions through a user-friendly interface, with secure crypto payment integration.' },
+      { title: 'AI-Based Resume Builder', theme: 'Job mapping', summary: 'Generates professional resumes and maps user profiles to relevant job opportunities using intelligent data processing.' },
+      { title: 'Drug Detection System', theme: 'IoT, cargo security', summary: 'Detects illegal substances in logistic containers to improve cargo security during transportation. Smart India Hackathon 2023 finalist.' }
+    ],
+    experience: [
+      { role: 'Web Development Intern', org: 'Virtual Tech Service', location: 'Chennai, India', period: 'Jun 2026', summary: 'Worked with a development team to build features for an e-commerce web application.' },
+      { role: 'Finalist', org: 'Smart India Hackathon 2023, Ministry of Education', location: 'India', period: 'Dec 2023', summary: 'Developed an IoT-based Drug Detection System for logistic containers.' }
+    ],
+    achievements: [
+      { title: 'Paper Presentation, 2nd place', event: 'Techgium edition, Prathyusha Engineering College', year: '2026' },
+      { title: 'Finalist', event: 'Smart India Hackathon', year: '2024' },
+      { title: 'Finalist', event: 'Smart India Hackathon', year: '2023' },
+      { title: 'Finalist', event: 'Techgium 9th Edition, LTTS', year: '-' }
+    ],
+    certifications: [
+      { course: 'Data Analytics Course', provider: 'Code99 IT Academy' },
+      { course: 'Excel & Power BI', provider: 'Infosys Springboard' },
+      { course: 'Python Course', provider: 'Besant Technologies' }
+    ],
+    education: [
+      { institution: 'RMK Engineering College', program: 'B.Tech Computer Science and Business Systems', years: '2022-2026', score: 'CGPA 7.79' },
+      { institution: 'Sri Durgadevi Polytechnic College', program: 'DME', years: '2020-2023', score: '88%' },
+      { institution: 'T.J.S Matriculation Hr. Sec. School', program: 'SSLC', years: '2019-2020', score: '70%' }
+    ],
+    skills: [
+      { category: 'Programming', items: 'Python, JavaScript, HTML, CSS' },
+      { category: 'Data Analysis', items: 'Data Cleaning, Data Transformation, Exploratory Data Analysis (EDA)' },
+      { category: 'Data Visualization', items: 'Power BI, Excel, Dashboard Development' },
+      { category: 'Database', items: 'SQL, Database Querying' },
+      { category: 'Tools', items: 'Git, GitHub, VS Code, Microsoft Excel, Power BI, Jupyter Notebook' },
+      { category: 'Business', items: 'Fintech, Business Analytics, Data-Driven Decision Making' },
+      { category: 'Soft Skills', items: 'Communication, Teamwork, Problem Solving, Innovation, Creativity, Critical Thinking, Time Management' }
+    ],
+    interests: [
+      { kind: 'area of interest', topic: 'Data Analytics' },
+      { kind: 'area of interest', topic: 'Business Intelligence' },
+      { kind: 'area of interest', topic: 'Data Visualization' },
+      { kind: 'area of interest', topic: 'SQL Management' },
+      { kind: 'hobby', topic: 'Learning New Technologies' },
+      { kind: 'hobby', topic: 'Problem Solving' },
+      { kind: 'hobby', topic: 'Continuous Learning' },
+      { kind: 'hobby', topic: 'Exploring IT Concepts' }
+    ]
+  };
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var out = document.getElementById('out');
+  var input = document.getElementById('q');
+  var chipsBox = document.getElementById('chips');
+  var typing = 0;
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+
+  function msg(text, isErr) {
+    out.appendChild(el('p', 'msg' + (isErr ? ' err' : ''), text));
+  }
+
+  function table(rows) {
+    var cols = Object.keys(rows[0]);
+    var wrap = el('div', 'tablewrap');
+    var t = el('table');
+    var thead = el('thead');
+    var trh = el('tr');
+    cols.forEach(function (c) { trh.appendChild(el('th', '', c)); });
+    thead.appendChild(trh);
+    t.appendChild(thead);
+    var tb = el('tbody');
+    rows.forEach(function (r, i) {
+      var tr = el('tr');
+      tr.style.setProperty('--i', i);
+      cols.forEach(function (c) { tr.appendChild(el('td', '', r[c])); });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    wrap.appendChild(t);
+    return wrap;
+  }
+
+  function setActive(name) {
+    chipsBox.querySelectorAll('.chip').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.dataset.table === name ? 'true' : 'false');
+    });
+  }
+
+  function run(raw) {
+    var q = raw.trim().replace(/;+\s*$/, '').trim();
+    out.replaceChildren();
+    var echo = el('div', 'echo');
+    echo.appendChild(el('span', 'ps', 'sql> '));
+    echo.appendChild(el('span', '', q));
+    out.appendChild(echo);
+    setActive('');
+    if (!q) { msg('Type a query, or pick a table above.', true); return; }
+    var low = q.toLowerCase();
+
+    if (low === 'help') {
+      msg('Supported: SELECT * FROM <table>, SELECT * FROM <table> WHERE <column> = \'value\', show tables.');
+      msg('The WHERE match is case-insensitive and looks for the value inside the column.');
+      return;
+    }
+    if (low === 'show tables') {
+      var list = Object.keys(DB).map(function (n) { return { table: n, rows: String(DB[n].length) }; });
+      out.appendChild(el('p', 'meta', list.length + ' tables'));
+      out.appendChild(table(list));
+      return;
+    }
+    var m = q.match(/^select\s+\*\s+from\s+(\w+)(?:\s+where\s+(\w+)\s*(?:=|like)\s*['"]?%?([^'"%]+?)%?['"]?)?$/i);
+    if (!m) { msg('Query not recognized. Try SELECT * FROM projects, show tables or help.', true); return; }
+    var name = m[1].toLowerCase();
+    if (!DB[name]) { msg('No table named "' + m[1] + '". Tables: ' + Object.keys(DB).join(', ') + '.', true); return; }
+    var rows = DB[name];
+    if (m[2]) {
+      var wanted = m[2].toLowerCase();
+      var col = Object.keys(rows[0]).filter(function (c) { return c === wanted; })[0];
+      if (!col) { msg('Table "' + name + '" has no column "' + m[2] + '". Columns: ' + Object.keys(rows[0]).join(', ') + '.', true); return; }
+      var v = m[3].trim().toLowerCase();
+      rows = rows.filter(function (r) { return String(r[col]).toLowerCase().indexOf(v) !== -1; });
+    }
+    if (!m[2]) setActive(name);
+    out.appendChild(el('p', 'meta', rows.length + (rows.length === 1 ? ' row' : ' rows') + ' from ' + name));
+    if (rows.length) out.appendChild(table(rows)); else msg('0 rows. Try a different value.', true);
+  }
+
+  function typeQuery(q) {
+    clearInterval(typing);
+    if (reduce) { input.value = q; run(q); return; }
+    input.value = '';
+    var i = 0;
+    typing = setInterval(function () {
+      i += 1;
+      input.value = q.slice(0, i);
+      if (i >= q.length) { clearInterval(typing); run(q); }
+    }, 18);
+  }
+
+  Object.keys(DB).forEach(function (name) {
+    var b = el('button', 'chip');
+    b.type = 'button';
+    b.dataset.table = name;
+    b.setAttribute('aria-pressed', 'false');
+    b.appendChild(document.createTextNode(name));
+    b.appendChild(el('span', 'n', String(DB[name].length)));
+    b.addEventListener('click', function () { typeQuery('SELECT * FROM ' + name + ';'); });
+    chipsBox.appendChild(b);
+  });
+
+  document.getElementById('qform').addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearInterval(typing);
+    run(input.value);
+  });
+  run(input.value);
+
+  // theme toggle
+  document.getElementById('theme').addEventListener('click', function () {
+    var root = document.documentElement;
+    var cur = root.getAttribute('data-theme');
+    if (!cur) cur = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    root.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+  });
+
+  // copy buttons
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var label = b.textContent;
+      function done() { b.textContent = 'Copied'; setTimeout(function () { b.textContent = label; }, 1400); }
+      function select() {
+        var s = document.getElementById(b.dataset.target);
+        if (!s) return;
+        var r = document.createRange();
+        r.selectNodeContents(s);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(r);
+      }
+      try {
+        navigator.clipboard.writeText(b.dataset.copy).then(done, select);
+      } catch (err) { select(); }
+    });
+  });
+})();
+</script>
+
+</body></html>
